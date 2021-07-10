@@ -2,21 +2,39 @@ from player import Player
 import numpy as np
 from config import CONFIG
 import random
+import pandas as pd
 
 
 class Evolution():
 
     def __init__(self, mode):
         self.mode = mode
+        self.arr_max_fitness = []
+        self.arr_avg_fitness = []
+        self.arr_min_fitness = []
 
     # calculate fitness of players
     def calculate_fitness(self, players, delta_xs):
         for i, p in enumerate(players):
             p.fitness = delta_xs[i]
 
+    def find_max_fitness(self, array_of_players):
+        array_of_players.sort(key=lambda x: x.fitness, reverse=True)
+        return array_of_players[0].fitness
+
+    def find_min_fitness(self, array_of_players):
+        array_of_players.sort(key=lambda x: x.fitness, reverse=False)
+        return array_of_players[0].fitness
+
+    def find_avg_fitness(self, array_of_players):
+        sum_fitness = 0
+        for p in array_of_players:
+            sum_fitness += p.fitness
+        return sum_fitness / len(array_of_players)
+
     def mutate(self, child):
 
-        # TODO
+        # TODO add a Gaussian noise
         # child: an object of class `Player`
         pass
 
@@ -53,7 +71,17 @@ class Evolution():
         selected_players += random.choices(list(players), weights=player_fitness_arr, k=num_players)
         np_selected_players = np.array(selected_players)
 
-        # TODO (additional): plotting
+        # write to file
+        self.arr_max_fitness.append(self.find_max_fitness(players))
+        self.arr_min_fitness.append(self.find_min_fitness(players))
+        self.arr_avg_fitness.append(self.find_avg_fitness(players))
+
+        fitness_data = {'max': self.arr_max_fitness,
+                        'avg': self.arr_avg_fitness,
+                        'min': self.arr_min_fitness
+                        }
+        fitness_DF = pd.DataFrame(fitness_data)
+        fitness_DF.to_csv('evolution_info.csv')
 
         return np_selected_players
         # return players[: num_players]
