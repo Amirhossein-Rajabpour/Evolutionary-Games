@@ -1,6 +1,7 @@
 from player import Player
 import numpy as np
 from config import CONFIG
+import random
 
 
 class Evolution():
@@ -38,13 +39,21 @@ class Evolution():
             new_players = prev_players
             return new_players
 
+    def return_scores(self, array_of_players):
+        scores = [p.fitness for p in array_of_players]
+        return scores
+
     def next_population_selection(self, players, num_players):
 
-        # TODO
         # num_players example: 100
         # players: an array of `Player` objects
 
-        # TODO (additional): a selection method other than `top-k`
+        selected_players = []
+        player_fitness_arr = self.return_scores(players)
+        selected_players += random.choices(list(players), weights=player_fitness_arr, k=num_players)
+        np_selected_players = np.array(selected_players)
+
         # TODO (additional): plotting
 
-        return players[: num_players]
+        return np_selected_players
+        # return players[: num_players]

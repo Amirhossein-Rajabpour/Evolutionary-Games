@@ -105,8 +105,13 @@ class Player():
         # box_lists: an array of `BoxList` objects
         # agent_position example: [600, 250]
         # velocity example: 7
+        HEIGHT = CONFIG['HEIGHT']
+        WIDTH = CONFIG['WIDTH']
 
-        direction = -1
+        # array from inputs: input
+        output = self.nn.forward(input)
+        # direction = -1
+        direction = output
         return direction
 
     def collision_detection(self, mode, box_lists, camera):
