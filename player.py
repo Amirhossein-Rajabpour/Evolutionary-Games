@@ -100,16 +100,46 @@ class Player():
     
     def think(self, mode, box_lists, agent_position, velocity):
 
-        # TODO
-        # mode example: 'helicopter'
-        # box_lists: an array of `BoxList` objects
-        # agent_position example: [600, 250]
-        # velocity example: 7
         HEIGHT = CONFIG['HEIGHT']
         WIDTH = CONFIG['WIDTH']
 
-        # array from inputs: input
-        output = self.nn.forward(input)
+        # mode example: 'helicopter'
+        if mode == 'helicopter':
+            pass
+        elif mode == 'gravity':
+            pass
+        elif mode == 'thrust':
+            pass
+
+        # array from inputs: input_arr
+        input_arr = []
+
+        # box_lists: an array of `BoxList` objects
+        # take 2 next box lists
+        if len(box_lists) != 0:
+            # first BoxList
+            input_arr.append(box_lists[0].x/WIDTH)
+            input_arr.append(box_lists[0].gap_mid/HEIGHT)
+
+            # second BoxList
+            input_arr.append(box_lists[1].x/WIDTH)
+            input_arr.append(box_lists[1].gap_mid/HEIGHT)
+        else:
+            input_arr.append(0.0)
+            input_arr.append(0.0)
+            input_arr.append(0.0)
+            input_arr.append(0.0)
+
+        # agent_position example: [600, 250]
+        # x is constant
+        input_arr.append(agent_position[1]/HEIGHT)
+
+        # velocity example: 7
+        # TODO don't forget to normalize it
+        input_arr.append(velocity)
+
+        input_arr = np.array(input_arr)
+        output = self.nn.forward(input_arr)
         # direction = -1
         direction = output
         return direction
