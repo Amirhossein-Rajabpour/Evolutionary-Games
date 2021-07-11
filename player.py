@@ -135,8 +135,8 @@ class Player():
         input_arr.append(agent_position[1]/HEIGHT)
 
         # velocity example: 7
-        # TODO don't forget to normalize it
-        input_arr.append(velocity)
+        MAX_VELOCITY = 10
+        input_arr.append(velocity/MAX_VELOCITY)
 
         input_arr = np.array(input_arr)
         output = self.nn.forward(input_arr)
