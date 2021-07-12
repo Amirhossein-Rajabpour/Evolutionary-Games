@@ -57,14 +57,25 @@ class Evolution():
             copied_players = copy.deepcopy(prev_players)
             new_players = []
 
-            # select top players
+            # sort the list so that better players have more chances to be selected for mutation
             copied_players.sort(key=lambda x: x.fitness, reverse=True)
-            for p in range(num_players):
-                new_pop = copied_players.pop(0)
-                # mutate copied players
-                mutated_new_pop = self.mutate(new_pop)
-                # append to new_players
-                new_players.append(mutated_new_pop)
+
+            # we should iterate until new_players array becomes full
+            is_list_full = False
+            while not is_list_full:
+                for p in range(len(prev_players)):
+                    new_pop = copied_players.pop(0)
+
+                    # mutate copied players
+                    mutation_probability = 0.5
+                    random_prob = random.random()
+                    if random_prob < mutation_probability:
+                        mutated_new_pop = self.mutate(new_pop)
+                        # append to new_players
+                        new_players.append(mutated_new_pop)
+                        if len(new_players) >= num_players:
+                            is_list_full = True
+                            break
 
             # TODO (additional): a selection method other than `fitness proportionate`
             # TODO (additional): implementing crossover
