@@ -121,9 +121,13 @@ class Player():
             input_arr.append(box_lists[0].x/WIDTH)
             input_arr.append(box_lists[0].gap_mid/HEIGHT)
 
-            # second BoxList
-            input_arr.append(box_lists[1].x/WIDTH)
-            input_arr.append(box_lists[1].gap_mid/HEIGHT)
+            if len(box_lists) > 1:
+                # second BoxList
+                input_arr.append(box_lists[1].x/WIDTH)
+                input_arr.append(box_lists[1].gap_mid/HEIGHT)
+            else:
+                input_arr.append(0.0)
+                input_arr.append(0.0)
         else:
             input_arr.append(0.0)
             input_arr.append(0.0)
@@ -140,8 +144,13 @@ class Player():
 
         input_arr = np.array(input_arr)
         output = self.nn.forward(input_arr)
+        print('output: ', output)
         # direction = -1
-        direction = output
+
+        if mode == 'helicopter' and output > 0.5:
+            direction = 1
+        else:
+            direction = -1
         return direction
 
     def collision_detection(self, mode, box_lists, camera):
