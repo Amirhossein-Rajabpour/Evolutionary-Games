@@ -3,7 +3,7 @@ import numpy as np
 from config import CONFIG
 import random
 import pandas as pd
-
+import copy
 
 class Evolution():
 
@@ -36,7 +36,7 @@ class Evolution():
 
         # TODO add a Gaussian noise
         # child: an object of class `Player`
-        pass
+        return child
 
 
     def generate_new_population(self, num_players, prev_players=None):
@@ -50,11 +50,24 @@ class Evolution():
             # TODO
             # num_players example: 150
             # prev_players: an array of `Player` objects
+            # make a copy from prev_players
+            copied_players = copy.deepcopy(prev_players)
+            new_players = []
+
+            # select top players
+            copied_players.sort(key=lambda x: x.fitness, reverse=True)
+            for p in range(num_players):
+                new_pop = copied_players.pop(0)
+                # mutate copied players
+                mutated_new_pop = self.mutate(new_pop)
+                # append to new_players
+                new_players.append(mutated_new_pop)
 
             # TODO (additional): a selection method other than `fitness proportionate`
             # TODO (additional): implementing crossover
 
-            new_players = prev_players
+            new_players = np.array(new_players)
+            # new_players = prev_players
             return new_players
 
     def return_scores(self, array_of_players):
@@ -63,7 +76,6 @@ class Evolution():
 
     def next_population_selection(self, players, num_players):
 
-        # num_players example: 100
         # players: an array of `Player` objects
 
         selected_players = []
