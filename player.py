@@ -90,9 +90,9 @@ class Player():
 
         layer_sizes = None
         if mode == 'gravity':
-            layer_sizes = [6, 20, 1]
+            layer_sizes = [7, 30, 1]
         elif mode == 'helicopter':
-            layer_sizes = [6, 20, 1]
+            layer_sizes = [9, 50, 1]
         elif mode == 'thrust':
             layer_sizes = [6, 20, 1]
         return layer_sizes
@@ -115,28 +115,28 @@ class Player():
         input_arr = []
 
         # box_lists: an array of `BoxList` objects
-        # take 2 next box lists
+        # take 3 next box lists
         if len(box_lists) != 0:
             # first BoxList
             input_arr.append(box_lists[0].x/WIDTH)
             input_arr.append(box_lists[0].gap_mid/HEIGHT)
 
-            if len(box_lists) > 1:
+            if len(box_lists) > 2:
                 # second BoxList
                 input_arr.append(box_lists[1].x/WIDTH)
                 input_arr.append(box_lists[1].gap_mid/HEIGHT)
+
+                # third BoxList
+                input_arr.append(box_lists[2].x/WIDTH)
+                input_arr.append(box_lists[2].gap_mid/HEIGHT)
             else:
-                input_arr.append(0.0)
-                input_arr.append(0.0)
+                input_arr.extend([0.0, 0.0, 0.0, 0.0])
         else:
-            input_arr.append(0.0)
-            input_arr.append(0.0)
-            input_arr.append(0.0)
-            input_arr.append(0.0)
+            input_arr.extend([0.0, 0.0, 0.0, 0.0])
 
         # agent_position example: [600, 250]
-        # x is constant
-        input_arr.append(agent_position[1]/HEIGHT)
+        input_arr.append(agent_position[0] / WIDTH)
+        input_arr.append(agent_position[1] / HEIGHT)
 
         # velocity example: 7
         MAX_VELOCITY = 10
@@ -144,8 +144,6 @@ class Player():
 
         input_arr = np.array(input_arr)
         output = self.nn.forward(input_arr)
-        print('output: ', output)
-        # direction = -1
 
         if mode == 'helicopter' and output > 0.5:
             direction = 1

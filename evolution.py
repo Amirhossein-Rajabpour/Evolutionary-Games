@@ -58,16 +58,18 @@ class Evolution():
             new_players = []
 
             # sort the list so that better players have more chances to be selected for mutation
-            copied_players.sort(key=lambda x: x.fitness, reverse=True)
+            # copied_players.sort(key=lambda x: x.fitness, reverse=True)
+            copied_players = sorted(copied_players, key=lambda x: x.fitness, reverse=True)
 
             # we should iterate until new_players array becomes full
             is_list_full = False
             while not is_list_full:
                 for p in range(len(prev_players)):
-                    new_pop = copied_players.pop(0)
+                    new_pop = copied_players[p]
+                    # copied_players = np.delete(copied_players, 0)
 
                     # mutate copied players
-                    mutation_probability = 0.5
+                    mutation_probability = 0.6
                     random_prob = random.random()
                     if random_prob < mutation_probability:
                         mutated_new_pop = self.mutate(new_pop)
@@ -80,8 +82,7 @@ class Evolution():
             # TODO (additional): a selection method other than `fitness proportionate`
             # TODO (additional): implementing crossover
 
-            new_players = np.array(new_players)
-            # new_players = prev_players
+            # new_players = np.array(new_players)
             return new_players
 
     def return_scores(self, array_of_players):
@@ -109,5 +110,5 @@ class Evolution():
         fitness_DF = pd.DataFrame(fitness_data)
         fitness_DF.to_csv('evolution_info.csv')
 
-        return np_selected_players
+        return selected_players
         # return players[: num_players]
