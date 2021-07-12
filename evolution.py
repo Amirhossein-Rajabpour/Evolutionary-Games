@@ -34,8 +34,13 @@ class Evolution():
 
     def mutate(self, child):
 
-        # TODO add a Gaussian noise
         # child: an object of class `Player`
+        mean = 0
+        sd = 0.2
+        noise_W1 = np.random.normal(mean, sd, child.nn.W_1.shape)
+        noise_W2 = np.random.normal(mean, sd, child.nn.W_2.shape)
+        child.nn.W_1 += noise_W1
+        child.nn.W_2 += noise_W2
         return child
 
 
@@ -46,8 +51,6 @@ class Evolution():
             return [Player(self.mode) for _ in range(num_players)]
 
         else:
-
-            # TODO
             # num_players example: 150
             # prev_players: an array of `Player` objects
             # make a copy from prev_players
