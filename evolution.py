@@ -36,11 +36,18 @@ class Evolution():
 
         # child: an object of class `Player`
         mean = 0
-        sd = 0.2
+        sd = 0.5
         noise_W1 = np.random.normal(mean, sd, child.nn.W_1.shape)
+        noise_b1 = np.random.normal(mean, sd, child.nn.b_1.shape)
+
         noise_W2 = np.random.normal(mean, sd, child.nn.W_2.shape)
+        noise_b2 = np.random.normal(mean, sd, child.nn.b_2.shape)
+
         child.nn.W_1 += noise_W1
+        child.nn.b_1 += noise_b1
+
         child.nn.W_2 += noise_W2
+        child.nn.b_2 += noise_b2
         return child
 
 
@@ -58,7 +65,8 @@ class Evolution():
             new_players = []
 
             # sort the list so that better players have more chances to be selected for mutation
-            # copied_players.sort(key=lambda x: x.fitness, reverse=True)
+            # player_fitness_arr = self.return_scores(prev_players)
+            # copied_players = random.choices(list(copied_players), weights=player_fitness_arr, k=num_players)
             copied_players = sorted(copied_players, key=lambda x: x.fitness, reverse=True)
 
             # we should iterate until new_players array becomes full
@@ -69,7 +77,7 @@ class Evolution():
                     # copied_players = np.delete(copied_players, 0)
 
                     # mutate copied players
-                    mutation_probability = 0.6
+                    mutation_probability = 0.8
                     random_prob = random.random()
                     if random_prob < mutation_probability:
                         mutated_new_pop = self.mutate(new_pop)
@@ -82,7 +90,6 @@ class Evolution():
             # TODO (additional): a selection method other than `fitness proportionate`
             # TODO (additional): implementing crossover
 
-            # new_players = np.array(new_players)
             return new_players
 
     def return_scores(self, array_of_players):
@@ -92,11 +99,10 @@ class Evolution():
     def next_population_selection(self, players, num_players):
 
         # players: an array of `Player` objects
-
-        selected_players = []
         player_fitness_arr = self.return_scores(players)
-        selected_players += random.choices(list(players), weights=player_fitness_arr, k=num_players)
-        np_selected_players = np.array(selected_players)
+        # selected_players = random.choices(list(players), weights=player_fitness_arr, k=num_players)
+        players = sorted(players, key=lambda x: x.fitness, reverse=True)
+        selected_players = players[:num_players]
 
         # write to file
         self.arr_max_fitness.append(self.find_max_fitness(players))
@@ -111,4 +117,3 @@ class Evolution():
         fitness_DF.to_csv('evolution_info.csv')
 
         return selected_players
-        # return players[: num_players]

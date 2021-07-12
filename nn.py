@@ -11,9 +11,11 @@ class NeuralNetwork():
 
         # Weights and biases matrices
         self.W_1 = np.random.randn(self.input_neurons_num, self.hidden_neurons_num)
-        self.b_1 = np.zeros((self.hidden_neurons_num, 1))
+        # self.b_1 = np.zeros((self.hidden_neurons_num, 1))
+        self.b_1 = np.random.randn(self.hidden_neurons_num, 1)
         self.W_2 = np.random.randn(self.hidden_neurons_num, self.output_neurons_num)
-        self.b_2 = np.zeros((self.output_neurons_num, 1))
+        # self.b_2 = np.zeros((self.output_neurons_num, 1))
+        self.b_2 = np.random.randn(self.output_neurons_num, 1)
 
     def activation(self, x, activation_type):    # Leaky ReLU activation function
 

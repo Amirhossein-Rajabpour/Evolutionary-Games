@@ -92,7 +92,7 @@ class Player():
         if mode == 'gravity':
             layer_sizes = [7, 30, 1]
         elif mode == 'helicopter':
-            layer_sizes = [9, 50, 1]
+            layer_sizes = [7, 30, 1]
         elif mode == 'thrust':
             layer_sizes = [6, 20, 1]
         return layer_sizes
@@ -127,12 +127,14 @@ class Player():
                 input_arr.append(box_lists[1].gap_mid/HEIGHT)
 
                 # third BoxList
-                input_arr.append(box_lists[2].x/WIDTH)
-                input_arr.append(box_lists[2].gap_mid/HEIGHT)
+                # input_arr.append(box_lists[2].x/WIDTH)
+                # input_arr.append(box_lists[2].gap_mid/HEIGHT)
             else:
-                input_arr.extend([0.0, 0.0, 0.0, 0.0])
+                # input_arr.extend([0.0, 0.0, 0.0, 0.0])
+                input_arr.extend([0.0, 0.0])
         else:
             input_arr.extend([0.0, 0.0, 0.0, 0.0])
+            # input_arr.extend([0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
 
         # agent_position example: [600, 250]
         input_arr.append(agent_position[0] / WIDTH)
