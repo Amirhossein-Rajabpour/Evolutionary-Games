@@ -94,7 +94,7 @@ class Player():
         elif mode == 'helicopter':
             layer_sizes = [7, 30, 1]
         elif mode == 'thrust':
-            layer_sizes = [6, 20, 1]
+            layer_sizes = [7, 30, 1]
         return layer_sizes
 
     
@@ -102,14 +102,6 @@ class Player():
 
         HEIGHT = CONFIG['HEIGHT']
         WIDTH = CONFIG['WIDTH']
-
-        # mode example: 'helicopter'
-        if mode == 'helicopter':
-            pass
-        elif mode == 'gravity':
-            pass
-        elif mode == 'thrust':
-            pass
 
         # array from inputs: input_arr
         input_arr = []
@@ -147,10 +139,16 @@ class Player():
         input_arr = np.array(input_arr)
         output = self.nn.forward(input_arr)
 
-        if mode == 'helicopter' and output > 0.5:
+        if (mode == 'helicopter' or mode == 'gravity') and output > 0.5:
             direction = 1
-        else:
+        elif (mode == 'helicopter' or mode == 'gravity') and output <= 0.5:
             direction = -1
+        elif mode == 'thrust' and output > 0.7:
+            direction = 1
+        elif mode == 'thrust' and output < 0.3:
+            direction = -1
+        else:
+            direction = 0
         return direction
 
     def collision_detection(self, mode, box_lists, camera):
